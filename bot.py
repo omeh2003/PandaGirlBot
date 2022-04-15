@@ -55,13 +55,8 @@ def print_info_pandaGirl():
     mesage = "Price Panda Girl - " + usd + " USD\n\n" + \
              "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
              "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
-             "Volume % - " + usd_24h_change + " %\n\n" + \
-             "Market cap rang  - " + str(market_cap_rank) + "\n\n" + \
              "Historical ATH - " + str(ath) + "\n\n" + \
-             "Historical ATL  - " + atl.__str__() + "\n\n" + \
              "From ATH  % - " + ath_change_percentage.__str__() + "\n\n" + \
-             "From ATL  % - " + atl_change_percentage.__str__() + "\n\n" + \
-             "Total supply - " + total_supply.__str__() + "\n\n" + \
              "Circulating suplay - " + circulating_supply.__str__() + "\n\n"
     return mesage
 
