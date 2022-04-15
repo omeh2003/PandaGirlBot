@@ -52,17 +52,17 @@ def print_info_pandaGirl():
     atl_change_percentage = format(dicData['market_data']['atl_change_percentage']['usd'], ".2f")
     total_supply = format(dicData['market_data']['total_supply'], ".2f")
     circulating_supply = format(dicData['market_data']['circulating_supply'], ".2f")
-    mesage = "Price Panda Girl \n " + usd + " USD\n" + \
-             "Market capitalization  \n " + usd_market_cap + " USD\n" + \
-             "Volume 24 h \n " + usd_24h_vol + " USD\n" + \
-             "Volume % \n " + usd_24h_change + " %\n" + \
-             "Market cap rang  \n " + str(market_cap_rank) + "\n" + \
-             "Historical ATH \n " + str(ath) + "\n" + \
-             "Historical ATL  \n " + atl.__str__() + "\n" + \
-             "From ATH  % \n " + ath_change_percentage.__str__() + "\n" + \
-             "From ATL  % \n " + atl_change_percentage.__str__() + "\n" + \
-             "Total supply \n " + total_supply.__str__() + "\n" + \
-             "Circulating suplay \n " + circulating_supply.__str__() + "\n"
+    mesage = "Price Panda Girl - " + usd + " USD\n\n" + \
+             "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
+             "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
+             "Volume % - " + usd_24h_change + " %\n\n" + \
+             "Market cap rang  - " + str(market_cap_rank) + "\n\n" + \
+             "Historical ATH - " + str(ath) + "\n\n" + \
+             "Historical ATL  - " + atl.__str__() + "\n\n" + \
+             "From ATH  % - " + ath_change_percentage.__str__() + "\n\n" + \
+             "From ATL  % - " + atl_change_percentage.__str__() + "\n\n" + \
+             "Total supply - " + total_supply.__str__() + "\n\n" + \
+             "Circulating suplay - " + circulating_supply.__str__() + "\n\n"
     return mesage
 
 
