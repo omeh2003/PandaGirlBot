@@ -41,13 +41,9 @@ def get_GC_data():
 def print_info_pandaGirl():
     dicData = get_GC_price()
     usd = format(dicData.get('usd'), ".12f")
-    # print("Курс Panda Girl - " + usd + " USD")
     usd_market_cap = format(dicData.get('usd_market_cap'), ".2f")
-    # print("Рыночная капитализация  - " + usd_market_cap + " USD")
     usd_24h_vol = format(dicData.get('usd_24h_vol'), ".2f")
     usd_24h_change = format(dicData.get('usd_24h_change'), ".2f")
-    # print("Обьем торгов за 24 часа - " + usd_24h_vol + " USD")
-    # print("Изменение обьема торгов в процентах - " + usd_24h_change + " %")
     dicData = get_GC_data()
     market_cap_rank = dicData['market_data']['market_cap_rank']
     ath = format(dicData['market_data']['ath']['usd'], ".12f")
@@ -56,24 +52,17 @@ def print_info_pandaGirl():
     atl_change_percentage = format(dicData['market_data']['atl_change_percentage']['usd'], ".2f")
     total_supply = format(dicData['market_data']['total_supply'], ".2f")
     circulating_supply = format(dicData['market_data']['circulating_supply'], ".2f")
-    # print("Маркет кап ранг  - " + str(market_cap_rank))
-    # print("Исторический ATH - " + str(ath))
-    # print("Исторический ATL  - " + atl.__str__())
-    # print("от ATH  в процентах - " + ath_change_percentage.__str__())
-    # print("от ATL  в процентах - " + atl_change_percentage.__str__())
-    # print("Всего было выпушено монет - " + total_supply.__str__())
-    # print("Монет в обращение - " + circulating_supply.__str__())
-    mesage = "Price Panda Girl - " + usd + " USD\n" + \
-             "Market capitalization  - " + usd_market_cap + " USD\n" + \
-             "Volume 24 часа - " + usd_24h_vol + " USD\n" + \
-             "Volume % - " + usd_24h_change + " %\n" + \
-             "Market cap rang  - " + str(market_cap_rank) + "\n" + \
-             "Historical ATH - " + str(ath) + "\n" + \
-             "Historical ATL  - " + atl.__str__() + "\n" + \
-             "From ATH  % - " + ath_change_percentage.__str__() + "\n" + \
-             "From ATL  % - " + atl_change_percentage.__str__() + "\n" + \
-             "Total supply - " + total_supply.__str__() + "\n" + \
-             "Circulating suplay - " + circulating_supply.__str__() + "\n"
+    mesage = "Price Panda Girl \n " + usd + " USD\n" + \
+             "Market capitalization  \n " + usd_market_cap + " USD\n" + \
+             "Volume 24 h \n " + usd_24h_vol + " USD\n" + \
+             "Volume % \n " + usd_24h_change + " %\n" + \
+             "Market cap rang  \n " + str(market_cap_rank) + "\n" + \
+             "Historical ATH \n " + str(ath) + "\n" + \
+             "Historical ATL  \n " + atl.__str__() + "\n" + \
+             "From ATH  % \n " + ath_change_percentage.__str__() + "\n" + \
+             "From ATL  % \n " + atl_change_percentage.__str__() + "\n" + \
+             "Total supply \n " + total_supply.__str__() + "\n" + \
+             "Circulating suplay \n " + circulating_supply.__str__() + "\n"
     return mesage
 
 
@@ -83,7 +72,8 @@ def get_text_messages(message):
 
     if (datetime.datetime.utcnow() - lastmessage).seconds > 60:
         txt = print_info_pandaGirl()
-        bot.send_message(chat_id=-1001685153775, text=txt)
+
+        bot.send_message(chat_id=message.chat.id, text=txt)
         lastmessage = datetime.datetime.utcnow()
 
 
