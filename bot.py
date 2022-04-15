@@ -56,7 +56,6 @@ def print_info_pandaGirl():
              "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
              "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
              "Historical ATH - " + str(ath) + "\n\n" + \
-             "From ATH  % - " + ath_change_percentage.__str__() + "\n\n" + \
              "Circulating suplay - " + circulating_supply.__str__() + "\n\n"
     return mesage
 
