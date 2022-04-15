@@ -81,7 +81,7 @@ def print_info_pandaGirl():
 def get_text_messages(message):
     global lastmessage
 
-    if (datetime.datetime.utcnow() - lastmessage).seconds > 10:
+    if (datetime.datetime.utcnow() - lastmessage).seconds > 60:
         txt = print_info_pandaGirl()
         bot.send_message(chat_id=-1001685153775, text=txt)
         lastmessage = datetime.datetime.utcnow()
