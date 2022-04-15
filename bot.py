@@ -27,6 +27,17 @@ def get_GC_price():
     j = json.loads(r.text)
     return j.get('panda-girl')
 
+def get_GC_price_EUR():
+    URL = "https://api.coingecko.com/api/v3/simple/price?ids=panda-girl&vs_currencies=eur&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
+
+    s = requests.session()
+    r = s.get(URL)
+    if r.status_code != 200:
+        time.sleep(30)
+        get_GC_price()
+    j = json.loads(r.text)
+    return j.get('panda-girl')
+
 
 def get_GC_data():
     URL = "https://api.coingecko.com/api/v3/coins/panda-girl?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
@@ -41,7 +52,9 @@ def get_GC_data():
 
 def print_info_pandaGirl():
     dicData = get_GC_price()
+    dicDataEUR = get_GC_price_EUR()
     usd = format(dicData.get('usd'), ".12f")
+    eur = format(dicDataEUR.get('eur'), ".12f")
     usd_market_cap = '{:,}'.format(dicData.get('usd_market_cap'), ".2f")
     usd_24h_vol = '{:,}'.format(dicData.get('usd_24h_vol'), ".2f")
     usd_24h_change = format(dicData.get('usd_24h_change'), ".2f")
@@ -55,6 +68,7 @@ def print_info_pandaGirl():
     circulating_supply = '{:,}'.format(dicData['market_data']['circulating_supply'], ".2f")
     mesage = "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼\n\n" + \
              "Price Panda Girl - " + usd + " USD\n\n" + \
+             "Price Panda Girl - " + eur + " EUR\n\n" + \
              "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
              "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
              "Historical ATH - " + str(ath) + "\n\n" + \
