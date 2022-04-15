@@ -1,10 +1,11 @@
-from flask import Flask , request
+from flask import Flask, request
 import telebot
 import datetime
 import requests
 import json
 import time
 import os
+
 server = Flask(__name__)
 
 TOKEN = os.getenv('BOT_TOKEN')
@@ -41,8 +42,8 @@ def get_GC_data():
 def print_info_pandaGirl():
     dicData = get_GC_price()
     usd = format(dicData.get('usd'), ".12f")
-    usd_market_cap = format(dicData.get('usd_market_cap'), ".2f")
-    usd_24h_vol = format(dicData.get('usd_24h_vol'), ".2f")
+    usd_market_cap = '{:,}'.format(dicData.get('usd_market_cap'), ".2f")
+    usd_24h_vol = '{:,}'.format(dicData.get('usd_24h_vol'), ".2f")
     usd_24h_change = format(dicData.get('usd_24h_change'), ".2f")
     dicData = get_GC_data()
     market_cap_rank = dicData['market_data']['market_cap_rank']
@@ -51,12 +52,12 @@ def print_info_pandaGirl():
     ath_change_percentage = format(dicData['market_data']['ath_change_percentage']['usd'], ".2f")
     atl_change_percentage = format(dicData['market_data']['atl_change_percentage']['usd'], ".2f")
     total_supply = format(dicData['market_data']['total_supply'], ".2f")
-    circulating_supply = format(dicData['market_data']['circulating_supply'], ".2f")
+    circulating_supply = '{:,}'.format(dicData['market_data']['circulating_supply'], ".2f")
     mesage = "Price Panda Girl - " + usd + " USD\n\n" + \
              "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
              "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
              "Historical ATH - " + str(ath) + "\n\n" + \
-             "Circulating suplay - " + circulating_supply.__str__() + "\n\n"
+             "Circulating supply - " + circulating_supply.__str__() + "\n\n"
     return mesage
 
 
@@ -78,12 +79,13 @@ def getMessage():
     bot.process_new_updates([update])
     return "!", 200
 
+
 @server.route("/")
 def webhook():
     bot.remove_webhook()
     bot.set_webhook(url='https://pandagirl-bot.herokuapp.com/' + TOKEN)
     return "!", 200
 
+
 if __name__ == "__main__":
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
-
