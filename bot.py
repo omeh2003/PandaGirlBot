@@ -53,11 +53,13 @@ def print_info_pandaGirl():
     atl_change_percentage = format(dicData['market_data']['atl_change_percentage']['usd'], ".2f")
     total_supply = format(dicData['market_data']['total_supply'], ".2f")
     circulating_supply = '{:,}'.format(dicData['market_data']['circulating_supply'], ".2f")
-    mesage = "Price Panda Girl - " + usd + " USD\n\n" + \
+    mesage = "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼\n\n" + \
+             "Price Panda Girl - " + usd + " USD\n\n" + \
              "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
              "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
              "Historical ATH - " + str(ath) + "\n\n" + \
-             "Circulating supply - " + circulating_supply.__str__() + "\n\n"
+             "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼"
+
     return mesage
 
 
