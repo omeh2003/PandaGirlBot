@@ -1,5 +1,6 @@
 from flask import Flask, request
 import telebot
+from telebot import types
 import datetime
 import requests
 import json
@@ -73,7 +74,7 @@ def print_info_pandaGirl():
              "💵 Market capitalization  : " + usd_market_cap + " USD\n\n" + \
              "💵 Volume 24 h : " + usd_24h_vol + " USD\n\n" + \
              "💵 Historical ATH : " + str(ath) + "\n\n" + \
-             "[💰BUY HERE](https://pancakeswap.finance/swap#/swap?outputCurrency=0x4c4da68d45f23e38ec8407272ee4f38f280263c0)"+\
+             "[💰BUY HERE](https://pancakeswap.finance/swap?outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0)\n\n" + \
              "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼"
 
     return mesage
@@ -85,8 +86,12 @@ def get_text_messages(message):
 
     if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
         txt = print_info_pandaGirl()
-
-        bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown",disable_web_page_preview=True)
+        markup = types.ReplyKeyboardMarkup()
+        button = types.InlineKeyboardButton("[💰BUY HERE]",
+                                            "https://pancakeswap.finance/swap?outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0")
+        markup.add(button)
+        bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True,
+                         reply_markup=markup)
         lastmessage = datetime.datetime.utcnow()
 
 
