@@ -6,7 +6,10 @@ import requests
 import json
 import time
 import os
-
+# Command:
+# pgirl - Price Panda Girl Token
+# inusd - Convert PGIRL to USD
+# ineur - Convert PGIRL to EUR
 server = Flask(__name__)
 
 TOKEN = os.getenv('BOT_TOKEN')
@@ -100,11 +103,11 @@ def set_timer(message):
 
     if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
         args = message.text.split()
-        if len(args) > 0 and args[0].isdigit():
+        if len(args) > 1 and args[1].isdigit():
             token = int(args[1])
             dicData = get_GC_price()
-            usd = format(dicData.get('usd'), ".12f")
-            suma = int(token * usd)
+            usd = dicData.get('usd')
+            suma = '{:,}'.format(token*usd, ".2f")
             txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " USD 💵"
             bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True)
             lastmessage = datetime.datetime.utcnow()
@@ -122,8 +125,8 @@ def set_timer(message):
         if len(args) > 1 and args[1].isdigit():
             token = int(args[1])
             dicData = get_GC_price_EUR()
-            usd = format(dicData.get('eur'), ".12f")
-            suma = int(token * usd)
+            eur = dicData.get('eur')
+            suma = '{:,}'.format(token*eur, ".2f")
             txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " EUR 💶"
             bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True)
             lastmessage = datetime.datetime.utcnow()
