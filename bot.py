@@ -74,7 +74,6 @@ def print_info_pandaGirl():
              "💵 Market capitalization  : " + usd_market_cap + " USD\n\n" + \
              "💵 Volume 24 h : " + usd_24h_vol + " USD\n\n" + \
              "💵 Historical ATH : " + str(ath) + "\n\n" + \
-             "[💰BUY HERE](https://pancakeswap.finance/swap?outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0)\n\n" + \
              "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼"
 
     return mesage
