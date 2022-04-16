@@ -86,7 +86,7 @@ def get_text_messages(message):
 
     if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
         txt = print_info_pandaGirl()
-        markup = types.ReplyKeyboardMarkup()
+        markup = types.InlineKeyboardMarkup()
         button = types.InlineKeyboardButton("[💰BUY HERE]",
                                             "https://pancakeswap.finance/swap?outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0")
         markup.add(button)
