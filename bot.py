@@ -100,7 +100,7 @@ def set_timer(message):
 
     if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
         args = message.text.split()
-        if len(args) > 1 and args[1].isdigit():
+        if len(args) > 0 and args[0].isdigit():
             token = int(args[1])
             dicData = get_GC_price()
             usd = format(dicData.get('usd'), ".12f")
