@@ -58,7 +58,7 @@ def print_info_pandaGirl():
     usd = format(dicData.get('usd'), ".12f")
     eur = format(dicDataEUR.get('eur'), ".12f")
     usd_market_cap = '{:,}'.format(int(dicData.get('usd_market_cap')), ".2f")
-    usd_24h_vol = '{:,}'.format(dicData.get('usd_24h_vol'), ".2f")
+    usd_24h_vol = '{:,}'.format(int(dicData.get('usd_24h_vol')), ".2f")
     usd_24h_change = format(dicData.get('usd_24h_change'), ".2f")
     dicData = get_GC_data()
     market_cap_rank = dicData['market_data']['market_cap_rank']
@@ -92,6 +92,44 @@ def get_text_messages(message):
         bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True,
                          reply_markup=markup)
         lastmessage = datetime.datetime.utcnow()
+
+
+@bot.message_handler(commands=['inusd'])
+def set_timer(message):
+    global lastmessage
+
+    if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
+        args = message.text.split()
+        if len(args) > 1 and args[1].isdigit():
+            token = int(args[1])
+            dicData = get_GC_price()
+            usd = format(dicData.get('usd'), ".12f")
+            suma = int(token * usd)
+            txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " USD 💵"
+            bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True)
+            lastmessage = datetime.datetime.utcnow()
+
+        else:
+            bot.reply_to(message, 'Usage: /inusd <count_tokens>')
+
+
+@bot.message_handler(commands=['ineur'])
+def set_timer(message):
+    global lastmessage
+
+    if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
+        args = message.text.split()
+        if len(args) > 1 and args[1].isdigit():
+            token = int(args[1])
+            dicData = get_GC_price_EUR()
+            usd = format(dicData.get('eur'), ".12f")
+            suma = int(token * usd)
+            txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " EUR 💶"
+            bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True)
+            lastmessage = datetime.datetime.utcnow()
+
+        else:
+            bot.reply_to(message, 'Usage: /ineur <count_tokens>')
 
 
 @server.route('/' + TOKEN, methods=['POST'])
