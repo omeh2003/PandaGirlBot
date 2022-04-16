@@ -27,6 +27,7 @@ def get_GC_price():
     j = json.loads(r.text)
     return j.get('panda-girl')
 
+
 def get_GC_price_EUR():
     URL = "https://api.coingecko.com/api/v3/simple/price?ids=panda-girl&vs_currencies=eur&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
 
@@ -34,7 +35,7 @@ def get_GC_price_EUR():
     r = s.get(URL)
     if r.status_code != 200:
         time.sleep(30)
-        get_GC_price()
+        get_GC_price_EUR()
     j = json.loads(r.text)
     return j.get('panda-girl')
 
@@ -66,13 +67,13 @@ def print_info_pandaGirl():
     atl_change_percentage = format(dicData['market_data']['atl_change_percentage']['usd'], ".2f")
     total_supply = format(dicData['market_data']['total_supply'], ".2f")
     circulating_supply = '{:,}'.format(dicData['market_data']['circulating_supply'], ".2f")
-    mesage = "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼\n\n" + \
-             "Price Panda Girl - " + usd + " USD\n\n" + \
-             "Price Panda Girl - " + eur + " EUR\n\n" + \
-             "Market capitalization  - " + usd_market_cap + " USD\n\n" + \
-             "Volume 24 h - " + usd_24h_vol + " USD\n\n" + \
-             "Historical ATH - " + str(ath) + "\n\n" + \
-             "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼"
+    mesage = "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼\n\n" + \
+             "💵 Price Panda Girl : " + usd + " USD\n\n" + \
+             "💶 Price Panda Girl : " + eur + " EUR\n\n" + \
+             "💵 Market capitalization  : " + usd_market_cap + " USD\n\n" + \
+             "💵 Volume 24 h : " + usd_24h_vol + " USD\n\n" + \
+             "💵 Historical ATH : " + str(ath) + "\n\n" + \
+             "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼"
 
     return mesage
 
@@ -81,7 +82,7 @@ def print_info_pandaGirl():
 def get_text_messages(message):
     global lastmessage
 
-    if (datetime.datetime.utcnow() - lastmessage).seconds > 60:
+    if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
         txt = print_info_pandaGirl()
 
         bot.send_message(chat_id=message.chat.id, text=txt)
