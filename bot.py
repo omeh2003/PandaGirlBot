@@ -71,9 +71,9 @@ def print_info_pandaGirl():
     mesage = "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼\n\n" + \
              "💵 Price Panda Girl : " + usd + " USD\n\n" + \
              "💶 Price Panda Girl : " + eur + " EUR\n\n" + \
-             "💵 Market capitalization  : " + usd_market_cap + " USD\n\n" + \
-             "💵 Volume 24 h : " + usd_24h_vol + " USD\n\n" + \
-             "💵 Historical ATH : " + str(ath) + "\n\n" + \
+             "📊 Market capitalization  : " + usd_market_cap + " USD\n\n" + \
+             "💱 Volume 24 h : " + usd_24h_vol + " USD\n\n" + \
+             "💹  Historical ATH : " + str(ath) + "\n\n" + \
              "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼"
 
     return mesage
@@ -86,7 +86,7 @@ def get_text_messages(message):
     if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
         txt = print_info_pandaGirl()
         markup = types.InlineKeyboardMarkup()
-        button = types.InlineKeyboardButton("[💰BUY HERE]",
+        button = types.InlineKeyboardButton("💰BUY HERE",
                                             "https://pancakeswap.finance/swap?outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0")
         markup.add(button)
         bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True,
