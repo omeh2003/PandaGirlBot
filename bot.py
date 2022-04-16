@@ -57,7 +57,7 @@ def print_info_pandaGirl():
     dicDataEUR = get_GC_price_EUR()
     usd = format(dicData.get('usd'), ".12f")
     eur = format(dicDataEUR.get('eur'), ".12f")
-    usd_market_cap = '{:,}'.format(dicData.get('usd_market_cap'), ".2f")
+    usd_market_cap = '{:,}'.format(int(dicData.get('usd_market_cap')), ".2f")
     usd_24h_vol = '{:,}'.format(dicData.get('usd_24h_vol'), ".2f")
     usd_24h_change = format(dicData.get('usd_24h_change'), ".2f")
     dicData = get_GC_data()
