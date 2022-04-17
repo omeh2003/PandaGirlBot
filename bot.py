@@ -17,6 +17,8 @@ server = Flask(__name__)
 TOKEN = os.getenv('BOT_TOKEN')
 HEROKU_APP = os.getenv('HEROKU_APP')
 
+BINANCE_API = os.getenv("BINANCE_API")
+
 bot = telebot.TeleBot(TOKEN)
 
 LASTMESAGE = datetime.datetime.utcnow()
@@ -49,12 +51,12 @@ def get_GC_data():
 
     if DATA_Market is None or ((datetime.datetime.utcnow() - LASTMESAGE).seconds > 20):
         URL = "https://api.coingecko.com/api/v3/coins/panda-girl?"
-        URL = URL + "localization=false" + "&" \
-                                           "tickers=false" + "&" \
-                                                             "market_data=true" + "&" \
-                                                                                  "community_data=false" + "&" \
-                                                                                                           "developer_data=false" + "&" \
-                                                                                                                                    "sparkline=false"
+        URL = URL + "localization=false" + "&" + \
+                    "tickers=false" + "&" + \
+                    "market_data=true" + "&" + \
+                    "community_data=false" + "&" + \
+                    "developer_data=false" + "&" + \
+                    "sparkline=false"
         s = requests.session()
         r = s.get(URL)
         if r.status_code != 200:
@@ -154,6 +156,34 @@ def in_eur(message):
                          disable_web_page_preview=True)
     else:
         bot.reply_to(message, 'Usage: /ineur <count_tokens>')
+
+
+@bot.message_handler(commands=['balans'], is_chat_admin=True)
+def balance(message):
+    global LASTMESAGE
+    if (datetime.datetime.utcnow() - LASTMESAGE).seconds > 20:
+        args = message.text.split()
+        if len(args) > 1:
+            adress = args[1]
+            URL = "https: // api.bscscan.com / api" + \
+                  "?module = account" + \
+                  "& action = tokenbalance" + \
+                  "& contractaddress = 0x4c4da68D45F23E38ec8407272ee4f38F280263c0" + \
+                  "& address = " + adress + \
+                  "& tag = latest" + \
+                  "& apikey = " + BINANCE_API
+            s = requests.session()
+            r = s.get(URL)
+            j = json.loads(r.text)
+            tokens = j.get('result')
+            txt = "Balance Panda Girl Tokens: " + tokens.__str__() + "PGIRL"
+            LASTMESAGE = datetime.datetime.utcnow()
+            bot.send_message(chat_id=message.chat.id,
+                             text=txt,
+                             parse_mode="Markdown",
+                             disable_web_page_preview=True)
+        else:
+            bot.reply_to(message, 'Usage: /balance <address>')
 
 
 @server.route('/' + TOKEN, methods=['POST'])
