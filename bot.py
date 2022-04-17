@@ -158,10 +158,14 @@ def in_eur(message):
         bot.reply_to(message, 'Usage: /ineur <count_tokens>')
 
 
-@bot.message_handler(commands=['balans'], is_chat_admin=True)
+@bot.message_handler(commands=['balans'])
 def balance(message):
     global LASTMESAGE
-    if (datetime.datetime.utcnow() - LASTMESAGE).seconds > 20:
+    member = bot.get_chat_member(message.chat.id, message.from_user.id)
+    if member.status != 'creator' or member.status != 'administrator':
+        bot.reply_to(message, 'Only admins!!!')
+
+    elif (datetime.datetime.utcnow() - LASTMESAGE).seconds > 20:
         args = message.text.split()
         if len(args) > 1:
             adress = args[1]
