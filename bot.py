@@ -6,71 +6,96 @@ import requests
 import json
 import time
 import os
+
 # Command:
 # pgirl - Price Panda Girl Token
 # inusd - Convert PGIRL to USD
 # ineur - Convert PGIRL to EUR
+
 server = Flask(__name__)
 
 TOKEN = os.getenv('BOT_TOKEN')
+HEROKU_APP = os.getenv('HEROKU_APP')
+
 bot = telebot.TeleBot(TOKEN)
 
-datetime.datetime.utcnow()
+LASTMESAGE = datetime.datetime.utcnow()
+GC_price_usd = None
+GC_price_eur = None
+DATA_Market = None
 
-lastmessage = datetime.datetime.utcnow()
 
-
-def get_GC_price():
-    URL = "https://api.coingecko.com/api/v3/simple/price?ids=panda-girl&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
-
+def get_GC_price(cur="usd"):
+    URL = f"https://api.coingecko.com/api/v3/simple/price?"
+    URL = URL + f"ids=panda-girl&" \
+                f"vs_currencies={cur}&" \
+                f"include_market_cap=true&" \
+                f"include_24hr_vol=true&" \
+                f"include_24hr_change=true&" \
+                f"include_last_updated_at=true"
     s = requests.session()
     r = s.get(URL)
     if r.status_code != 200:
         time.sleep(30)
-        get_GC_price()
+        get_GC_price(cur)
     j = json.loads(r.text)
-    return j.get('panda-girl')
 
-
-def get_GC_price_EUR():
-    URL = "https://api.coingecko.com/api/v3/simple/price?ids=panda-girl&vs_currencies=eur&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
-
-    s = requests.session()
-    r = s.get(URL)
-    if r.status_code != 200:
-        time.sleep(30)
-        get_GC_price_EUR()
-    j = json.loads(r.text)
     return j.get('panda-girl')
 
 
 def get_GC_data():
-    URL = "https://api.coingecko.com/api/v3/coins/panda-girl?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
-    s = requests.session()
-    r = s.get(URL)
-    if r.status_code != 200:
-        time.sleep(30)
-        get_GC_price()
-    j = json.loads(r.text)
-    return j
+    global DATA_Market
+    global LASTMESAGE
+
+    if DATA_Market is None or ((datetime.datetime.utcnow() - LASTMESAGE).seconds > 20):
+        URL = "https://api.coingecko.com/api/v3/coins/panda-girl?"
+        URL = URL + "localization=false" + "&" \
+                                           "tickers=false" + "&" \
+                                                             "market_data=true" + "&" \
+                                                                                  "community_data=false" + "&" \
+                                                                                                           "developer_data=false" + "&" \
+                                                                                                                                    "sparkline=false"
+        s = requests.session()
+        r = s.get(URL)
+        if r.status_code != 200:
+            time.sleep(30)
+            get_GC_data()
+        DATA_Market = json.loads(r.text)
+
+    return DATA_Market
+
+
+def get_GC_priceUSD():
+    global GC_price_usd
+    global LASTMESAGE
+
+    if GC_price_usd is None or ((datetime.datetime.utcnow() - LASTMESAGE).seconds > 20):
+        GC_price_usd = get_GC_price("usd")
+        LASTMESAGE = datetime.datetime.utcnow()
+    return GC_price_usd
+
+
+def get_GC_priceEUR():
+    global GC_price_eur
+    global LASTMESAGE
+
+    if GC_price_eur is None or ((datetime.datetime.utcnow() - LASTMESAGE).seconds > 20):
+        GC_price_eur = get_GC_price("eur")
+        LASTMESAGE = datetime.datetime.utcnow()
+    return GC_price_eur
 
 
 def print_info_pandaGirl():
-    dicData = get_GC_price()
-    dicDataEUR = get_GC_price_EUR()
-    usd = format(dicData.get('usd'), ".12f")
-    eur = format(dicDataEUR.get('eur'), ".12f")
-    usd_market_cap = '{:,}'.format(int(dicData.get('usd_market_cap')), ".2f")
-    usd_24h_vol = '{:,}'.format(int(dicData.get('usd_24h_vol')), ".2f")
-    usd_24h_change = format(dicData.get('usd_24h_change'), ".2f")
+    dicDataUSD = get_GC_priceUSD()
+    dicDataEUR = get_GC_priceEUR()
     dicData = get_GC_data()
-    market_cap_rank = dicData['market_data']['market_cap_rank']
+
+    usd = format(dicDataUSD.get('usd'), ".12f")
+    eur = format(dicDataEUR.get('eur'), ".12f")
+    usd_market_cap = '{:,}'.format(int(dicDataUSD.get('usd_market_cap')), ".2f")
+    usd_24h_vol = '{:,}'.format(int(dicDataUSD.get('usd_24h_vol')), ".2f")
     ath = format(dicData['market_data']['ath']['usd'], ".12f")
-    atl = format(dicData['market_data']['atl']['usd'], ".12f")
-    ath_change_percentage = format(dicData['market_data']['ath_change_percentage']['usd'], ".2f")
-    atl_change_percentage = format(dicData['market_data']['atl_change_percentage']['usd'], ".2f")
-    total_supply = format(dicData['market_data']['total_supply'], ".2f")
-    circulating_supply = '{:,}'.format(dicData['market_data']['circulating_supply'], ".2f")
+
     mesage = "🐼🐼🐼🐼🐼🐼🐼🐼🐼🐼\n\n" + \
              "💵 Price Panda Girl : " + usd + " USD\n\n" + \
              "💶 Price Panda Girl : " + eur + " EUR\n\n" + \
@@ -83,56 +108,52 @@ def print_info_pandaGirl():
 
 
 @bot.message_handler(commands=['pgirl'])
-def get_text_messages(message):
-    global lastmessage
-
-    if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
-        txt = print_info_pandaGirl()
-        markup = types.InlineKeyboardMarkup()
-        button = types.InlineKeyboardButton("💰BUY HERE",
-                                            "https://pancakeswap.finance/swap?outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0")
-        markup.add(button)
-        bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True,
-                         reply_markup=markup)
-        lastmessage = datetime.datetime.utcnow()
+def pgirl(message):
+    txt = print_info_pandaGirl()
+    markup = types.InlineKeyboardMarkup()
+    button = types.InlineKeyboardButton("💰BUY HERE",
+                                        "https://pancakeswap.finance/swap?"
+                                        "outputCurrency=0x4c4da68D45F23E38ec8407272ee4f38F280263c0")
+    markup.add(button)
+    bot.send_message(chat_id=message.chat.id,
+                     text=txt,
+                     parse_mode="Markdown",
+                     disable_web_page_preview=True,
+                     reply_markup=markup)
 
 
 @bot.message_handler(commands=['inusd'])
-def set_timer(message):
-    global lastmessage
-
-    if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
-        args = message.text.split()
-        if len(args) > 1 and args[1].isdigit():
-            token = int(args[1])
-            dicData = get_GC_price()
-            usd = dicData.get('usd')
-            suma = '{:,}'.format(token*usd, ".2f")
-            txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " USD 💵"
-            bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True)
-            lastmessage = datetime.datetime.utcnow()
-
-        else:
-            bot.reply_to(message, 'Usage: /inusd <count_tokens>')
+def in_usd(message):
+    args = message.text.split()
+    if len(args) > 1 and args[1].isdigit():
+        token = int(args[1])
+        dicData = get_GC_priceUSD()
+        usd = dicData.get('usd')
+        suma = '{:,}'.format(token * usd, ".2f")
+        txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " USD 💵"
+        bot.send_message(chat_id=message.chat.id,
+                         text=txt,
+                         parse_mode="Markdown",
+                         disable_web_page_preview=True)
+    else:
+        bot.reply_to(message, 'Usage: /inusd <count_tokens>')
 
 
 @bot.message_handler(commands=['ineur'])
-def set_timer(message):
-    global lastmessage
-
-    if (datetime.datetime.utcnow() - lastmessage).seconds > 6:
-        args = message.text.split()
-        if len(args) > 1 and args[1].isdigit():
-            token = int(args[1])
-            dicData = get_GC_price_EUR()
-            eur = dicData.get('eur')
-            suma = '{:,}'.format(token*eur, ".2f")
-            txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " EUR 💶"
-            bot.send_message(chat_id=message.chat.id, text=txt, parse_mode="Markdown", disable_web_page_preview=True)
-            lastmessage = datetime.datetime.utcnow()
-
-        else:
-            bot.reply_to(message, 'Usage: /ineur <count_tokens>')
+def in_eur(message):
+    args = message.text.split()
+    if len(args) > 1 and args[1].isdigit():
+        token = int(args[1])
+        dicData = get_GC_priceEUR()
+        eur = dicData.get('eur')
+        suma = '{:,}'.format(token * eur, ".2f")
+        txt = "Your Panda Girl Tokens Have a Сost: " + suma.__str__() + " EUR 💶"
+        bot.send_message(chat_id=message.chat.id,
+                         text=txt,
+                         parse_mode="Markdown",
+                         disable_web_page_preview=True)
+    else:
+        bot.reply_to(message, 'Usage: /ineur <count_tokens>')
 
 
 @server.route('/' + TOKEN, methods=['POST'])
@@ -146,7 +167,8 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://pandagirl-bot.herokuapp.com/' + TOKEN)
+
+    bot.set_webhook(url='https://' + HEROKU_APP + '.herokuapp.com/' + TOKEN)
     return "!", 200
 
 
